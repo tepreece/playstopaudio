@@ -1,0 +1,21 @@
+playstopaudio - a simple audio library wrapper for Python
+version 0.1 by Thomas Preece
+http://tpreece.net
+thomas@tpreece.net
+
+Copyright (c) 2009 - 2013 Thomas Preece
+
+You may freely use this software under the conditions of the MIT licence 
+- see the LICENCE file for details.
+
+This is a simple audio library wrapper for Python. It aims to wrap various audio
+libraries into an interface that gives you sound objects with methods like
+"play" and "stop". The idea is that you can write your application to use these
+methods, but the actual underlying library can be swapped out as audio
+architectures change.
+
+Currently it supports a few simple methods for Audiere and GStreamer; more
+coming soon.
+
+To see how it works, drop a file called "test.ogg" into this directory, and then
+run "./test.py" - you can examine the source of that file for more details.
