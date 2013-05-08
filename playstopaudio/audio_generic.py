@@ -19,15 +19,18 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import os
+
 class Audio():
 	def __init__(self):
-		pass
+		self.sound_class = Sound
 	
 	def open_file(self, fname):
-		pass
+		abs_fname = os.path.abspath(fname)
+		return self.sound_class(abs_fname)
 
 class Sound():
-	def __init__(self, name):
+	def __init__(self, fname):
 		self.time_const = float(1)
 	
 	def get_long_length(self):

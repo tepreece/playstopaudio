@@ -20,23 +20,18 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import audiere
-import os
-
 import audio_generic
 
 class Audio_Audiere(audio_generic.Audio):
 	def __init__(self):
-		self.audio = audiere.open_device()
-	
-	def open_file(self, fname):
-		abs_fname = os.path.abspath(fname)
-		return Sound_Audiere(self.audio, abs_fname)
+		self.sound_class = Sound_Audiere
+		self.audiere = audiere.open_device()
 
 class Sound_Audiere(audio_generic.Sound):
 	def __init__(self, audio, fname):
 		self.time_const = float(44100)
-		self.audio = audio
-		self.audiofile = self.audio.open_file(fname, True)
+		self.audiere = audio.audiere
+		self.audiofile = self.audiere.open_file(fname, True)
 	
 	def get_long_length(self):
 		return self.audiofile.length

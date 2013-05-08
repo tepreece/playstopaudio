@@ -21,17 +21,12 @@
 
 import pygst
 import gst
-import os
 
 import audio_generic
 
 class Audio_GStreamer(audio_generic.Audio):
 	def __init__(self):
-		pass
-	
-	def open_file(self, fname):
-		abs_fname = os.path.abspath(fname)
-		return Sound_GStreamer(abs_fname)
+		self.sound_class = Sound_GStreamer
 
 class Sound_GStreamer(audio_generic.Sound):
 	def __init__(self, fname):
