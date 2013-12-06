@@ -19,11 +19,13 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import audio_generic, audio_gstreamer, audio_audiere
+import audio_gstreamer, audio_audiere
 
 class PlayStopAudioException(Exception):
 	pass
 
+# General constructor method to create the correct sort of audio class - the
+# interesting parts are in the classes themselves.
 def audio(classlist=('gstreamer', 'audiere')):
 	for c in classlist:
 		if c == 'gstreamer':

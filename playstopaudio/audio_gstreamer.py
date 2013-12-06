@@ -19,18 +19,29 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import pygst
-import gst
+import gst, pygst
+
+# Most of the documentation for what the different parameters mean and how to
+# practically use them is found in the audio_generic module - you should
+# probably read that instead unless you are particularly interested in the
+# underlying workings of the GStreamer backend.
 
 import audio_generic
 
+# We don't actually need to do anything specific to get GStreamer going,
+# but we need a basic Audio class to make it interchangeable with the other
+# types.
 class Audio_GStreamer(audio_generic.Audio):
 	def __init__(self):
 		self.sound_class = Sound_GStreamer
 
 class Sound_GStreamer(audio_generic.Sound):
 	def __init__(self, audio, fname):
+		# not the sample rate, but what GStreamer uses...
 		self.time_const = float(1000000000)
+		
+		# using a 'playbin2' player - much easier than setting up a full
+		# pipeline, and sufficient for our purposes
 		self.player = gst.element_factory_make("playbin2", "player")
 		self.player.set_property("uri", "file://" + fname)
 		
@@ -47,6 +58,8 @@ class Sound_GStreamer(audio_generic.Sound):
 		self._seek_to = None
 	
 	def get_long_length(self):
+		# read the length if it isn't already cached
+		# if something goes wrong (which it shouldn't), return zero
 		if self._length is None:
 			try:
 				self._length = self.player.query_duration(gst.FORMAT_TIME, None)[0]
@@ -55,6 +68,7 @@ class Sound_GStreamer(audio_generic.Sound):
 		return self._length
 	
 	def get_long_position(self):
+		# if something goes wrong (which it shouldn't), return zero
 		try:
 			return self.player.query_position(gst.FORMAT_TIME, None)[0]
 		except:
@@ -78,6 +92,8 @@ class Sound_GStreamer(audio_generic.Sound):
 		self.player.set_property('volume', volume)
 	
 	def get_playing(self):
+		# get the playing state, and update our understanding of it if we've
+		# played past the end (and are now stopped)
 		if self.player.get_state()[1] == gst.STATE_PLAYING:
 			if self.long_position >= self.long_duration:
 				self.stop()

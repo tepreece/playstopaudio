@@ -20,8 +20,15 @@
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 import audiere
+
+# Most of the documentation for what the different parameters mean and how to
+# practically use them is found in the audio_generic module - you should
+# probably read that instead unless you are particularly interested in the
+# underlying workings of the GStreamer backend.
+
 import audio_generic
 
+# We can only open the Audiere device once, so do it in the Audio class.
 class Audio_Audiere(audio_generic.Audio):
 	def __init__(self):
 		self.sound_class = Sound_Audiere
@@ -29,10 +36,11 @@ class Audio_Audiere(audio_generic.Audio):
 
 class Sound_Audiere(audio_generic.Sound):
 	def __init__(self, audio, fname):
-		self.time_const = float(44100)
+		self.time_const = float(44100) # assume 44100 samples per second
 		self.audiere = audio.audiere
-		self.audiofile = self.audiere.open_file(fname, True)
+		self.audiofile = self.audiere.open_file(fname, True) # stream from disk
 	
+	# the rest are all fairly self-explanatory, as Audiere is pretty simple...
 	def get_long_length(self):
 		return self.audiofile.length
 	

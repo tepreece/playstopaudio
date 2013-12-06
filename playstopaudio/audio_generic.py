@@ -21,18 +21,37 @@
 
 import math, os
 
+# Generic audio classes. All of the audio classes inherit from these, which
+# implement placeholder methods for everything, and helper methods for parts
+# that are just maths rather than involving the audio itself.
+
+# An 'Audio' is a class that defines how this type of audio is going to work.
+# It specifies which Sound class will be created, and optionally handles
+# anything that needs to be done once - eg for Audiere, it handles the
+# soundcard object.
 class Audio():
 	def __init__(self):
 		self.sound_class = Sound
 	
 	def open_file(self, fname):
+		# Open a file, and return a Sound for it.
 		abs_fname = os.path.abspath(fname)
 		return self.sound_class(self, abs_fname)
 
+# A 'Sound' is a clip that is going to be played. The generic Sound class
+# implements several helper methods, and the general get/set logic; the
+# individual classes deal with actually playing out that audio.
 class Sound():
 	def __init__(self, fname):
+		# time_const - usually (but not necessarily) the sample rate
 		self.time_const = float(1)
 	
+	# 'length' and 'position' are in seconds; 'long_length' and 'long_position'
+	# are in samples. The individual classes should generally just implement
+	# long_length and long_position, and let the wrapper deal with the
+	# conversion. Note that 'duration' is a synonym for length. NB - the
+	# position is settable, but not the length (as that is determined by the
+	# actual length of the clip that we loaded).
 	def get_long_length(self):
 		return 0
 	
@@ -51,22 +70,28 @@ class Sound():
 	def set_position(self, position):
 		self.long_position = position * self.time_const
 	
+	# 'volume' is generally on a scale of 0.0 - 1.0 (although this isn't
+	# enforced, as you may want to go above that if the underlying audio
+	# architecture supports it)
 	def get_volume(self):
 		return 0
 	
 	def set_volume(self, volume):
 		pass
 	
+	# 'gain' is logarithmic; convert it to a volume so that it can be passed
+	# to the audio architecture
 	def get_gain(self):
 		return 20*math.log10(self.volume)
 	
 	def set_gain(self, gain):
 		self.volume = math.pow(10, float(gain)/20.0)
-		print self.volume
 	
+	# is the audio currently playing?
 	def get_playing(self):
 		return False
 	
+	# play, stop and pause the audio
 	def play(self):
 		pass
 	
@@ -76,6 +101,7 @@ class Sound():
 	def pause(self):
 		pass
 	
+	# convert the above methods into properties on this object
 	def __getattr__(self, name):
 		if name == 'long_length' or name == 'long_duration':
 			return self.get_long_length()
