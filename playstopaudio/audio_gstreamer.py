@@ -29,7 +29,7 @@ class Audio_GStreamer(audio_generic.Audio):
 		self.sound_class = Sound_GStreamer
 
 class Sound_GStreamer(audio_generic.Sound):
-	def __init__(self, fname):
+	def __init__(self, audio, fname):
 		self.time_const = float(1000000000)
 		self.player = gst.element_factory_make("playbin2", "player")
 		self.player.set_property("uri", "file://" + fname)
@@ -40,6 +40,11 @@ class Sound_GStreamer(audio_generic.Sound):
 		if self.player.get_state()[1] == gst.STATE_PAUSED:
 			throwaway = self.length
 		self.player.set_state(gst.STATE_NULL)
+		
+		# GStreamer won't seek while the file isn't playing.
+		# Work around this by storing a position so seek to immediately
+		# upon starting to play.
+		self._seek_to = None
 	
 	def get_long_length(self):
 		if self._length is None:
@@ -55,6 +60,23 @@ class Sound_GStreamer(audio_generic.Sound):
 		except:
 			return 0
 	
+	def set_long_position(self, position):
+		if self.playing:
+			# if playing, we can just seek
+			self.player.seek_simple(
+				gst.FORMAT_TIME,
+				gst.SEEK_FLAG_FLUSH | gst.SEEK_FLAG_KEY_UNIT, 
+				position)
+		else:
+			# if not playing, set the position to seek to when we start playing
+			self._seek_to = position
+	
+	def get_volume(self):
+		return self.player.get_property('volume')
+	
+	def set_volume(self, volume):
+		self.player.set_property('volume', volume)
+	
 	def get_playing(self):
 		if self.player.get_state()[1] == gst.STATE_PLAYING:
 			if self.long_position >= self.long_duration:
@@ -65,6 +87,10 @@ class Sound_GStreamer(audio_generic.Sound):
 	
 	def play(self):
 		self.player.set_state(gst.STATE_PLAYING)
+		# seek if needed
+		if self._seek_to is not None:
+			self.long_position = self._seek_to
+			self._seek_to = None			
 	
 	def stop(self):
 		self.player.set_state(gst.STATE_NULL)

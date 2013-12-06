@@ -19,7 +19,7 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import os
+import math, os
 
 class Audio():
 	def __init__(self):
@@ -27,7 +27,7 @@ class Audio():
 	
 	def open_file(self, fname):
 		abs_fname = os.path.abspath(fname)
-		return self.sound_class(abs_fname)
+		return self.sound_class(self, abs_fname)
 
 class Sound():
 	def __init__(self, fname):
@@ -44,6 +44,25 @@ class Sound():
 	
 	def get_position(self):
 		return self.long_position / self.time_const
+	
+	def set_long_position(self, position):
+		pass
+	
+	def set_position(self, position):
+		self.long_position = position * self.time_const
+	
+	def get_volume(self):
+		return 0
+	
+	def set_volume(self, volume):
+		pass
+	
+	def get_gain(self):
+		return 20*math.log10(self.volume)
+	
+	def set_gain(self, gain):
+		self.volume = math.pow(10, float(gain)/20.0)
+		print self.volume
 	
 	def get_playing(self):
 		return False
@@ -66,5 +85,27 @@ class Sound():
 			return self.get_long_position()
 		elif name == 'position':
 			return self.get_position()
+		elif name == 'volume':
+			return self.get_volume()
+		elif name == 'gain':
+			return self.get_gain()
 		elif name == 'playing':
 			return self.get_playing()
+	
+	def __setattr__(self, name, val):
+		if name == 'long_position':
+			self.set_long_position(val)
+		elif name == 'position':
+			self.set_position(val)
+		elif name == 'volume':
+			self.set_volume(val)
+		elif name == 'gain':
+			return self.set_gain(val)
+		else:
+			self.__dict__[name]=val
+	
+
+
+
+
+

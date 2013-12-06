@@ -28,7 +28,9 @@ print 'Going to try playing the test file. Press ^C to quit.'
 
 # Firstly, open an audio player. You can specify which types you are willing
 # to accept - currently only 'gstreamer' and 'audiere'.
-audio = playstopaudio.audio(['gstreamer', 'audiere'])
+
+#audio = playstopaudio.audio(['audiere'])
+audio = playstopaudio.audio(['gstreamer'])
 
 # Check that we've received a usable audio object.
 if audio is None:
@@ -37,15 +39,22 @@ if audio is None:
 # Open an audio file. It can be a relative or absolute path.
 af = audio.open_file('test.ogg')
 
+# Set a start position (in seconds) and gain (in dB, ie it should be negative).
+af.position = 0.0
+af.gain = -0.0
+
 # Start the file playing
 af.play()
+a = False
 
 while True:
 	# print some stats
-	print af.duration, af.position, af.playing
+	print af.duration, af.gain, af.position, af.playing
 	
 	# start it going when it stops
 	if af.playing == False: af.play()
 	
 	# wait a second
 	time.sleep(1)
+
+

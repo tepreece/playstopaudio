@@ -39,6 +39,15 @@ class Sound_Audiere(audio_generic.Sound):
 	def get_long_position(self):
 		return self.audiofile.position
 	
+	def set_long_position(self, position):
+		self.audiofile.position = position
+	
+	def get_volume(self):
+		return self.audiofile.volume
+	
+	def set_volume(self, volume):
+		self.audiofile.volume = volume
+	
 	def get_playing(self):
 		return bool(self.audiofile.playing)
 	

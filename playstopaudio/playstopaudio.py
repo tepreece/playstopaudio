@@ -21,6 +21,9 @@
 
 import audio_generic, audio_gstreamer, audio_audiere
 
+class PlayStopAudioException(Exception):
+	pass
+
 def audio(classlist=('gstreamer', 'audiere')):
 	for c in classlist:
 		if c == 'gstreamer':
@@ -34,7 +37,7 @@ def audio(classlist=('gstreamer', 'audiere')):
 			except:
 				pass
 		else:
-			print 'Unknown audio class: %s' % c
-	print 'Sorry, no usable audio classes.'
+			raise PlayStopAudioException('Unknown audio class: %s' % c)
+	raise PlayStopAudioException('No usable audio classes.')
 	return None
 	
