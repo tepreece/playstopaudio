@@ -19,8 +19,6 @@
 # TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 # SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-import audio_gstreamer, audio_audiere
-
 class PlayStopAudioException(Exception):
 	pass
 
@@ -30,11 +28,13 @@ def audio(classlist=('gstreamer', 'audiere')):
 	for c in classlist:
 		if c == 'gstreamer':
 			try:
+				import audio_gstreamer
 				return audio_gstreamer.Audio_GStreamer()
 			except:
 				pass
 		elif c == 'audiere':
 			try:
+				import audio_audiere
 				return audio_audiere.Audio_Audiere()
 			except:
 				pass

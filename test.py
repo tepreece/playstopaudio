@@ -29,8 +29,7 @@ print 'Going to try playing the test file. Press ^C to quit.'
 # Firstly, open an audio player. You can specify which types you are willing
 # to accept - currently only 'gstreamer' and 'audiere'.
 
-#audio = playstopaudio.audio(['audiere'])
-audio = playstopaudio.audio(['gstreamer'])
+audio = playstopaudio.audio(['gstreamer', 'audiere'])
 
 # Check that we've received a usable audio object.
 if audio is None:
