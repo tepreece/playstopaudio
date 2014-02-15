@@ -1,9 +1,9 @@
 playstopaudio - a simple audio library wrapper for Python
-version 0.1 by Thomas Preece
+version 0.2 by Thomas Preece
 http://tpreece.net
 thomas@tpreece.net
 
-Copyright (c) 2009 - 2013 Thomas Preece
+Copyright (c) 2009 - 2014 Thomas Preece
 
 You may freely use this software under the conditions of the MIT licence 
 - see the LICENCE file for details.
