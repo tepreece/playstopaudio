@@ -24,12 +24,18 @@ class PlayStopAudioException(Exception):
 
 # General constructor method to create the correct sort of audio class - the
 # interesting parts are in the classes themselves.
-def audio(classlist=('gstreamer', 'audiere')):
+def audio(classlist=('gstreamer', 'gstreamer_old', 'audiere')):
 	for c in classlist:
 		if c == 'gstreamer':
 			try:
 				import audio_gstreamer
 				return audio_gstreamer.Audio_GStreamer()
+			except:
+				pass
+		elif c == 'gstreamer_old':
+			try:
+				import audio_gstreamer_old
+				return audio_gstreamer.Audio_GStreamer_old()
 			except:
 				pass
 		elif c == 'audiere':
